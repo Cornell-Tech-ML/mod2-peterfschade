@@ -66,9 +66,11 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
-    for i in reversed(range(len(shape))):
-        out_index[i] = ordinal % shape[i]
-        ordinal //= shape[i]
+    cur_pos = ordinal + 0
+    for i in range(len(shape) - 1, -1, -1):
+        sh = shape[i]
+        out_index[i] = int(cur_pos % sh)
+        cur_pos = cur_pos // sh
     # TODO: Implement for Task 2.1.
     #raise NotImplementedError("Need to implement for Task 2.1")
 
@@ -93,7 +95,13 @@ def broadcast_index(
 
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError("Need to implement for Task 2.2")
+    for i, s in enumerate(shape):
+        if s > 1:
+            out_index[i] = big_index[i + (len(big_shape) - len(shape))]
+        else:
+            out_index[i] = 0
+    return None
+    #raise NotImplementedError("Need to implement for Task 2.2")
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
@@ -111,7 +119,19 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
 
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError("Need to implement for Task 2.2")
+    if len(shape1) < len(shape2):
+        shape1 = [1] * (len(shape2) - len(shape1)) + list(shape1)
+    if len(shape2) < len(shape1):
+        shape2 = [1] * (len(shape1) - len(shape2)) + list(shape2)
+
+    broadcasted_shape = []
+    for a, b in zip(shape1, shape2):
+        if a != b and a != 1 and b != 1:
+            raise IndexingError(
+                f"Can not broadcast between shape1 {shape1} and shape2 {shape2}."
+            )
+        broadcasted_shape.append(max(a, b))
+    return tuple(broadcasted_shape)
 
 
 def strides_from_shape(shape: UserShape) -> UserStrides:

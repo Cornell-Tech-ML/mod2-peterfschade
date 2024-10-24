@@ -13,23 +13,23 @@ from .tensor_data import TensorData
 
 # Comment these out if not yet implemented
 from .tensor_functions import (
-    #EQ,
-    #LT,
-    #Add,
-    #All,
-    #Copy,
-    #Exp,
-    #Inv,
-    #IsClose,
-    #Log,
-    #MatMul,
-    #Mul,
-    #Neg,
-    #Permute,
-    #ReLU,
-    #Sigmoid,
-    #Sum,
-    #View,
+    EQ,
+    LT,
+    Add,
+    All,
+    Copy,
+    Exp,
+    Inv,
+    IsClose,
+    Log,
+    MatMul,
+    Mul,
+    Neg,
+    Permute,
+    ReLU,
+    Sigmoid,
+    Sum,
+    View,
     tensor,
 )
 
@@ -282,6 +282,107 @@ class Tensor:
 
         """
         return self._tensor.shape
+    
+    @property
+    def size(self) -> int:
+        """Returns
+        size of the tensor
+
+        """
+        return self._tensor.size
+    
+    @property
+    def dims(self) -> int:
+        """Returns
+        number of dimensions of the tensor
+
+        """
+        return len(self.shape)
 
     # Functions
     # TODO: Implement for Task 2.3.
+    
+    def relu(self) -> Tensor:
+        return ReLU.apply(self)
+    
+    def neg(self) -> Tensor:
+        return Neg.apply(self)
+        
+    def __eq__(self, b:TensorLike) -> Tensor:
+        return EQ.apply(self, self._ensure_tensor(b))
+    
+    def __lt__(self, b:TensorLike) -> Tensor:
+        return LT.apply(self,self._ensure_tensor(b))
+    
+    def __gt__(self,b:TensorLike) -> Tensor:
+        return LT.apply(self._ensure_tensor(b),self)
+    
+    def __add__(self,b:TensorLike) -> Tensor:
+        return Add.apply(self,self._ensure_tensor(b))
+    
+    def __radd__(self, b: TensorLike) -> Tensor:
+        return self.__add__(b)
+    
+    def __sub__(self,b:TensorLike) -> Tensor:
+        return Add.apply(self, Neg.apply(self._ensure_tensor(b)))
+    
+    def __rsub__(self,b:TensorLike) -> Tensor:
+        return Add.apply(Neg.apply(self), self._ensure_tensor(b))
+    
+    def __mul__(self, b:TensorLike) -> Tensor:
+        return Mul.apply(self,self._ensure_tensor(b))
+    
+    def __rmul__(self, b:TensorLike) -> Tensor:
+        return self.__mul__(b)
+    
+    def inv(self) -> Tensor:
+        return Inv.apply(self)
+    
+    def exp(self) -> Tensor:
+        return Exp.apply(self)
+    
+    def log(self) -> Tensor:
+        return Log.apply(self)
+    
+    def is_close(self,b:Tensor) -> Tensor:
+        return IsClose.apply(self,self._ensure_tensor(b))
+    
+    def sigmoid(self) -> Tensor:
+        return Sigmoid.apply(self)
+        
+    def copy(self) -> Tensor:
+        return Copy.apply(self)
+    
+    def permute(self,*order:int) -> Tensor:
+        return Permute.apply(self,Tensor.make(list(order), (len(list(order)),), backend=self.backend))
+    
+    def view(self,*shape:int) -> Tensor:
+        return View.apply(self.contiguous(), Tensor.make(list(shape), (len(list(shape)),), backend=self.backend))
+    
+    def all(self,dim: Optional[int] = None) -> Tensor:
+        if dim is None:
+            return All.apply(self)
+        else:
+            return All.apply(self, Tensor.make([dim], (1,), backend=self.backend))
+    
+    def sum(self,dim:Optional[int] = None) -> Tensor:
+        if dim is None:
+            flat_tensor = self.view(self.size)
+            return Sum.apply(flat_tensor)
+        else:
+            return Sum.apply(self, Tensor.make([dim], (1,), backend=self.backend))
+    
+    def mean(self,dim:Optional[int] = None) -> Tensor:
+        if dim is None:
+            return self.sum() / self._tensor.size
+        else:
+            return self.sum(dim) / self.shape[dim]
+
+    def zero_grad_(self) -> None:
+        """
+        Reset the derivative on this variable.
+        """
+        self.grad = None
+    
+    #Permute,
+    #Sum,
