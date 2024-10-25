@@ -22,7 +22,8 @@ Dataset:simple, pts: 50
 4 hidden layer size
 LR: 0.05
 Epoch:500
-
+![alt text](simple_dots.png)
+![alt text](simple_loss.png)
 ___________________________________
 Epoch: 0/500, loss: 0, correct: 0
 Epoch: 0/500, loss: 0, correct: 0
@@ -83,6 +84,8 @@ Dataset:diag, pts: 50
 5 hidden layer size
 LR: 0.1
 Epoch:750
+![alt text](diag_dots.png)
+![alt text](diag_loss.png)
 
 ___________________________________
 Epoch: 0/775, loss: 0, correct: 0
@@ -169,6 +172,8 @@ Dataset:split, pts: 50
 6 hidden layer size
 LR: 0.1
 Epoch:750
+![alt text](split_dots.png)
+![alt text](split_loss.png)
 _____________________________
 Epoch: 0/775, loss: 0, correct: 0
 Epoch: 10/775, loss: 33.50857357084479, correct: 33
@@ -254,6 +259,9 @@ Dataset:Xor, pts: 50
 10 hidden layer size
 LR: 0.5
 Epoch:750
+
+![alt text](xor_dots.png)
+![alt text](xor_loss.png)
 _____________________________
 
 Epoch: 0/775, loss: 0, correct: 0
