@@ -36,7 +36,7 @@ class Linear(minitorch.Module):
         # weights: (in_size, out_size)
         # bias: (out_size)
         # linear = x * weights + bias
-        
+
         x_view_add = x.view(*x.shape, 1) # add a dimension to x
         weights_add = self.weights.value.view(1, *self.weights.value.shape) # add a dimension to weights
         weighted_x = x_view_add * weights_add # multiply weights by input
