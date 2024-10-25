@@ -66,7 +66,7 @@ def test_permute(data: DataObject, t1: Tensor) -> None:
 
     def permute(a: Tensor) -> Tensor:
         return a.permute(*permutation)
-
+    
     grad_check(permute, t1)
 
 
