@@ -35,13 +35,32 @@ class TensorOps:
     def zip(
         fn: Callable[[float, float], float],
     ) -> Callable[[Tensor, Tensor], Tensor]:
-        """Zip placeholder"""
+        """Apply a binary function element-wise to two tensors.
+
+        Args:
+            fn (Callable[[float, float], float]): A function that takes two floats and returns a float.
+
+        Returns:
+            Callable[[Tensor, Tensor], Tensor]: A function that takes two tensors and returns a tensor.
+            
+        """
         ...
 
     @staticmethod
     def reduce(
         fn: Callable[[float, float], float], start: float = 0.0
-    ) -> Callable[[Tensor, int], Tensor]: ...
+    ) -> Callable[[Tensor, int], Tensor]:
+        """Reduce a tensor along a specified dimension using a binary function.
+
+        Args:
+            fn (Callable[[float, float], float]): A function that takes two floats and returns a float.
+            start (float, optional): The initial value for the reduction. Defaults to 0.0.
+
+        Returns:
+            Callable[[Tensor, int], Tensor]: A function that takes a tensor and a dimension, and returns a reduced tensor.
+            
+        """
+        ...
 
     @staticmethod
     def matrix_multiply(a: Tensor, b: Tensor) -> Tensor:
@@ -95,9 +114,9 @@ class SimpleOps(TensorOps):
     def map(fn: Callable[[float], float]) -> MapProto:
         """Higher-order tensor map function ::
 
-          fn_map = map(fn)
-          fn_map(a, out)
-          out
+        fn_map = map(fn)
+        fn_map(a, out)
+        out
 
         Simple version::
 
@@ -115,7 +134,7 @@ class SimpleOps(TensorOps):
             fn: function from float-to-float to apply.
             a (:class:`TensorData`): tensor to map over
             out (:class:`TensorData`): optional, tensor data to fill in,
-                   should broadcast with `a`
+                should broadcast with `a`
 
         Returns:
             new tensor data
@@ -137,8 +156,8 @@ class SimpleOps(TensorOps):
     ) -> Callable[["Tensor", "Tensor"], "Tensor"]:
         """Higher-order tensor zip function ::
 
-          fn_zip = zip(fn)
-          out = fn_zip(a, b)
+        fn_zip = zip(fn)
+        out = fn_zip(a, b)
 
         Simple version ::
 
@@ -181,8 +200,8 @@ class SimpleOps(TensorOps):
     ) -> Callable[["Tensor", int], "Tensor"]:
         """Higher-order tensor reduce function. ::
 
-          fn_reduce = reduce(fn)
-          out = fn_reduce(a, dim)
+        fn_reduce = reduce(fn)
+        out = fn_reduce(a, dim)
 
         Simple version ::
 
@@ -196,6 +215,7 @@ class SimpleOps(TensorOps):
             fn: function from two floats-to-float to apply
             a (:class:`TensorData`): tensor to reduce over
             dim (int): int of dim to reduce
+            start (float, optional): initial value for reduction. Defaults to 0.0.
 
         Returns:
             :class:`TensorData` : new tensor
@@ -235,14 +255,14 @@ def tensor_map(
     Simple version:
 
     * Fill in the `out` array by applying `fn` to each
-      value of `in_storage` assuming `out_shape` and `in_shape`
-      are the same size.
+    value of `in_storage` assuming `out_shape` and `in_shape`
+    are the same size.
 
     Broadcasted version:
 
     * Fill in the `out` array by applying `fn` to each
-      value of `in_storage` assuming `out_shape` and `in_shape`
-      broadcast. (`in_shape` must be smaller than `out_shape`).
+    value of `in_storage` assuming `out_shape` and `in_shape`
+    broadcast. (`in_shape` must be smaller than `out_shape`).
 
     Args:
         fn: function from float-to-float to apply

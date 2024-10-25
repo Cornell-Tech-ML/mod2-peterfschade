@@ -199,9 +199,34 @@ class TensorData:
 
     @staticmethod
     def shape_broadcast(shape_a: UserShape, shape_b: UserShape) -> UserShape:
+        """_summary_
+        broadcast two shapes to create a new union shape.
+        Args:
+            shape_a (UserShape): shape of the first tensor
+            shape_b (UserShape): shape of the second tensor
+
+        Returns:
+            UserShape: shape of the broadcasted tensor
+            
+        """
         return shape_broadcast(shape_a, shape_b)
 
     def index(self, index: Union[int, UserIndex]) -> int:
+        """_summary_
+        Get index in storage
+
+        Args:
+            index (Union[int, UserIndex]): index to get
+
+        Raises:
+            IndexingError: Index must be size of shape
+            IndexingError: Index out of range
+            IndexingError: Negative indexing not supported
+
+        Returns:
+            int: index in storage
+            
+        """
         if isinstance(index, int):
             aindex: Index = array([index])
         else:  # if isinstance(index, tuple):
@@ -225,6 +250,7 @@ class TensorData:
         return index_to_position(array(index), self._strides)
 
     def indices(self) -> Iterable[UserIndex]:
+        """Generate all valid indices"""
         lshape: Shape = array(self.shape)
         out_index: Index = array(self.shape)
         for i in range(self.size):
@@ -236,10 +262,12 @@ class TensorData:
         return tuple((random.randint(0, s - 1) for s in self.shape))
 
     def get(self, key: UserIndex) -> float:
+        """Get a value from the tensor"""
         x: float = self._storage[self.index(key)]
         return x
 
     def set(self, key: UserIndex, val: float) -> None:
+        """Set a value in the tensor"""
         self._storage[self.index(key)] = val
 
     def tuple(self) -> Tuple[Storage, Shape, Strides]:
